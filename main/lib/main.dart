@@ -35,7 +35,6 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
   double _width = 80.0;
   var _color = Colors.blue;
   bool _resized = false;
-  //bool _resized = false;
   final FirebaseMessaging _messaging = FirebaseMessaging();
    @override
   void initState() {
@@ -110,8 +109,6 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
                   itemBuilder: (context, index) => new Card(
                     elevation: 10.0,
                     margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-              // margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    // tag: palette[index].keys.first,
                     // child: new GestureDetector(
                           
                     child: new Container(
@@ -145,7 +142,6 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
                         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
               
                         child: new Container(
-                      // height: 250.0,
                       width: double.infinity,
                       decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9),
                       // boxShadow: [new BoxShadow(
@@ -154,7 +150,6 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
                       //       ),]
                             ),
                       child: makeListTile(index),
-                      // color: new Color(palette[index].values.first),
                       
                     ),
                   ),
@@ -197,8 +192,7 @@ ListTile makeListTile(index) {
                 FlatButton.icon(onPressed: _launchURL , icon: new Icon(IconData(0xe88f, fontFamily: 'MaterialIcons'), color: Colors.yellowAccent),label:Text("")),
           
             ]),               
-        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
+       
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
             
@@ -221,27 +215,7 @@ ListTile makeListTile(index) {
                 ])
             ),
             ]),
-            // Icon(Icons.linear_scale, color: Colors.yellowAccent),
-            // FlatButton(child: const Text('View Results'),
-            //   onPressed: (){
-            //     Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (context) => ColorPageRoute()),
-            //     );
-            //   }
-            // ),
-            // Align(
-            //   alignment:Alignment.centerRight,
-            //   child: FlatButton.icon(icon: Icons.keyboard_arrow_right, color: Colors.white, size: 30.0,label:   Text("View Results"),
-            //                       onPressed: (){
-            //                         Navigator.push(
-            //                         context,
-            //                         MaterialPageRoute(builder: (context) => ColorPageRoute()),
-            //                         );
-            //                       }),
-                          
-            // ),
-       
+           
               new Padding(
                 padding: new EdgeInsets.symmetric(vertical: 3.0)),
               new Row(
@@ -320,10 +294,8 @@ ListTile makeListTile(index) {
                   child: const Text("View Results"), textColor: Colors.white, onPressed: (){
                           Navigator.of(context).push(new ColorPageRoute());
                   }
-                          // context,
-                          // Cuper(builder: (context) => ColorPageRoute(palette[index].keys.first)),
+                          
             )
-                        // }),
     
                 ],),
           ] 
@@ -369,8 +341,6 @@ ListTile makeListTile(index) {
     }
 
   }
-  
-
   }
 
 class ColorPageRoute extends CupertinoPageRoute {
@@ -383,7 +353,6 @@ class ColorPageRoute extends CupertinoPageRoute {
   //   title1 = t;
   // }
   Widget build(BuildContext context) {
-    // print("color");
     return new MaterialApp(
       title: title1,
       theme: new ThemeData(
@@ -418,12 +387,6 @@ class _SecondPageState extends State<SecondPage> {
   String _searchText = "";
   List<List<String>> names =new List.generate(50, (i) => []);
   List<List<String>> filteredNames =new List.generate(50, (i) => []);
-  // List<List<String>> names = new List();
-  // List<List<String>> filteredNames = new List();
-
-  // List names = new List();
-  // List filteredNames = new List();
-  
   Icon _searchIcon = new Icon(Icons.search,color: Colors.yellowAccent);
   Widget _appBarTitle = new Text('Event_Name');
 
@@ -489,7 +452,7 @@ class _SecondPageState extends State<SecondPage> {
       filteredNames = tempList;
       for(int i=0;i<filteredNames.length;i++) {
         for(int j=0;j<filteredNames[i].length;j++)  {
-          print("HI"+filteredNames[i][j]);
+          print(filteredNames[i][j]);
         }
       }
     }
@@ -508,7 +471,6 @@ class _SecondPageState extends State<SecondPage> {
               child: Container(
                 decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
                child: makeListTile2(index),
-                  // print(index);
               ),
           );
         },
@@ -531,14 +493,8 @@ Widget makeListTile2(index) {
   }
   print("_____");
   return  ListTile(
-     contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          
-          // decoration: new BoxDecoration(
-          //     border: new Border(
-          //         right: new BorderSide(width: 1.0, color: Colors.white24))
-          //         ),
-            
-        title: 
+          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          title: 
           Row(children: <Widget>[
                   Column(children: <Widget> [
                     Align(
@@ -564,32 +520,28 @@ Widget makeListTile2(index) {
                 ),
                    new Padding(
                 padding: new EdgeInsets.symmetric(vertical: 3.0)),
-           
-                  
-                
           ]),
-            Column(children: <Widget> [
-              new Padding(
-                padding: new EdgeInsets.symmetric(horizontal: 10.0,vertical: 8.0)),
-             
-              Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('                  Marks',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-                  new Padding(
-                padding: new EdgeInsets.symmetric(horizontal: 13.0,vertical: 3.0)),
-           
-              Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('                      Selected',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-            ]),
-              
-          ]),
+      Column(children: <Widget> [
+        new Padding(
+          padding: new EdgeInsets.symmetric(horizontal: 10.0,vertical: 8.0)),
+        
+        Align(
+              alignment: Alignment.centerRight,
+              child: Text('                  Marks',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ),
+            new Padding(
+          padding: new EdgeInsets.symmetric(horizontal: 13.0,vertical: 3.0)),
+      
+        Align(
+              alignment: Alignment.centerRight,
+              child: Text('                      Selected',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ),
+      ]),
+        
+    ]),
           
-            // subtitle: Text("Marks", style: TextStyle(color: Colors.white)),
   );}
 }
 
@@ -620,9 +572,7 @@ Widget makeListTile2(index) {
 
   void _getNames() async{
     print("_GETNAMES");
-    // List tempList = new List();
     List<List<String>> tempList =new List.generate(50, (i) => []);
-    print("_GETNAMES11");
     
 
     for (int i = 0; i < 50; i++) {
@@ -632,7 +582,6 @@ Widget makeListTile2(index) {
           print("Item $k");
       }
     }
-    print("_GETNAMES22");
     
     setState(() {
       names = tempList;
