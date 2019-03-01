@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'dart:convert';
 
 void main() => runApp(new MyApp());
 
@@ -12,10 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Flutter Demo',
-      theme: new ThemeData(
-        primarySwatch: Colors.purple,
-      ),
-      home: new FirstPage(title: 'Events'),
+      home: new FirstPage(title: "P'19 Tech Events"),
     );
   }
 }
@@ -34,129 +32,75 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
   double _width = 80.0;
   var _color = Colors.blue;
   bool _resized = false;
-  final FirebaseMessaging _messaging = FirebaseMessaging();
-  @override
-  void initState() {
-    super.initState();
-    _messaging.getToken().then((token) {
-      print("TOkEN");
-      print(token);
-    });
-  }
 
   Icon _notifyIcon = new Icon(IconData(0xe7f7, fontFamily: 'MaterialIcons'),
       color: Colors.yellowAccent);
-
-  final palette = [
-    {'Motorq Hackathon': 0xFFD81B60},
-    {'OSPC': 0xFFE53935},
-    {'DB Dwellers': 0xFF3949AB},
-    {'Mini Placement': 0xFF8E24AA},
-    {'Amazon Hiring Event': 0xFD8E24AB},
-    {'Paper Presentation': 0xFF00ACC1},
-    {'Code \'N Chaos': 0xFF5E35B1},
-    {'Parseltongue': 0xFF1E88E5},
-    {'OOPS! It\'s Java': 0xFF039BE5},
-    {'Web Hub': 0xFF00897B},
-  ];
-  final dates = [
-    {'March 2 & 3': '10:00 AM - 10:00 AM'},
-    {'March 8': '9:00 AM - 1:30 PM'},
-    {'March 8': '9:00 AM - 1:30 PM'},
-    {'March 8': '9:00 AM - 1:30 PM'},
-    {'March 8': '9:00 AM - 1:30 PM'},
-    {'March 8': '9:00 AM - 1:30 PM'},
-    {'March 9': '9:00 PM - 1:30 PM'},
-    {'March 9': '9:00 PM - 1:30 PM'},
-    {'March 9': '9:00 PM - 1:30 PM'},
-    {'March 9': '9:00 PM - 1:30 PM'},
+  final events = [
+    {'name': 'OSPC', 'date': 'March 8, 9:00 AM - 1:30 PM', 'id': 'ospc'},
+    {
+      'name': 'Mini Placement',
+      'date': 'March 8, 9:00 AM - 1:30 PM',
+      'id': 'miniplacement'
+    },
+    {
+      'name': 'Amazon Hiring Event',
+      'date': 'March 8, 9:00 AM - 1:30 PM',
+      'id': 'amazon'
+    },
+    {
+      'name': "Code 'N Chaos",
+      'date': 'March 9, 9:00 AM - 1:30 PM',
+      'id': 'cnc'
+    },
+    {
+      'name': 'Parseltongue',
+      'date': 'March 9, 9:00 AM - 1:30 PM',
+      'id': 'python'
+    },
+    {
+      'name': "OOPS! It's Java",
+      'date': 'March 9, 9:00 AM - 1:30 PM',
+      'id': 'java'
+    },
+    {'name': 'Web Hub', 'date': 'March 9, 9:00 AM - 1:30 PM', 'id': 'web'},
   ];
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-          appBar: AppBar(
-            elevation: 10,
-            backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-            title: new Text(widget.title),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.list),
-                onPressed: () {},
-              )
-            ],
-            bottom: TabBar(
-              tabs: [
-                Tab(text: "Technical"),
-                Tab(
-                  text: "Non Technical",
-                ),
-              ],
-            ),
-          ),
-          body: TabBarView(children: [
-            new Container(
-                margin:
-                    new EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
-                child: new ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: palette.length,
-                  itemBuilder: (context, index) => new Card(
-                        elevation: 10.0,
-                        margin: new EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 6.0),
-                        // child: new GestureDetector(
-
-                        child: new Container(
-                          // height: 250.0,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(64, 75, 96, .9),
-                            // boxShadow: [new BoxShadow(
-                            // color: Color.fromRGBO(64, 75, 99, .6),
-                            // blurRadius: 20.0,
-                            // ),]
-                          ),
-                          child: makeListTile(index),
-                          // color: new Color(palette[index].values.first),
-                        ),
-                      ),
-                )
-                // ),
-
-                ),
-            new Container(
-                margin:
-                    new EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
-                child: new ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: palette.length,
-                  itemBuilder: (context, index) => new Card(
-                        elevation: 10.0,
-                        margin: new EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 6.0),
-                        child: new Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(64, 75, 96, .9),
-                            // boxShadow: [new BoxShadow(
-                            //           color: Color.fromRGBO(64, 75, 99, .6),
-                            //           blurRadius: 20.0,
-                            //       ),]
-                          ),
-                          child: makeListTile(index),
-                        ),
-                      ),
-                ))
-          ]),
-        ),
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      appBar: AppBar(
+        elevation: 7,
+        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        title: new Text(widget.title),
       ),
+      body: Container(
+          padding: new EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
+          child: new ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: events.length,
+            itemBuilder: (context, index) => new Card(
+                  elevation: 7.0,
+                  margin:
+                      new EdgeInsets.symmetric(horizontal: 6.0, vertical: 5.0),
+                  child: new InkWell(
+                      onTap: _launchURL,
+                      splashColor: Color.fromRGBO(48, 56, 76, 1),
+                      child: new Container(
+                        // height: 250.0,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(64, 75, 96, .9),
+                          // boxShadow: [new BoxShadow(
+                          // color: Color.fromRGBO(64, 75, 99, .6),
+                          // blurRadius: 20.0,
+                          // ),]
+                        ),
+                        child: makeListTile(index),
+                      )),
+                ),
+          )),
     );
   }
 
@@ -170,23 +114,8 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
                 right: new BorderSide(width: 1.0, color: Colors.white24))),
         child: Icon(Icons.autorenew, color: Colors.white),
       ),
-      title:
-          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-        new AspectRatio(
-            aspectRatio: 100 / 100,
-            // Align(
-            // alignment: Alignment.center,
-            child: Text(
-              '${palette[index].keys.first}',
-              // style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              // ),
-            )),
-        FlatButton.icon(
-            onPressed: _launchURL,
-            icon: new Icon(IconData(0xe88f, fontFamily: 'MaterialIcons'),
-                color: Colors.yellowAccent),
-            label: Text("")),
-      ]),
+      title: Text('${events[index]['name']}',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -200,9 +129,7 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
                       children: <Widget>[
                         Icon(IconData(0xe916, fontFamily: 'MaterialIcons'),
                             color: Colors.yellowAccent),
-                        Text(' ${dates[index].keys.first}, ',
-                            style: TextStyle(color: Colors.white)),
-                        Text('${dates[index].values.first}',
+                        Text(' ${events[index]['date']}',
                             style: TextStyle(color: Colors.white)),
                       ])),
             ]),
@@ -217,13 +144,6 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
                       icon: new Icon(
                           IconData(0xe0b0, fontFamily: 'MaterialIcons'),
                           color: Colors.yellowAccent),
-                      label: Text("")),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: FlatButton.icon(
-                      onPressed: _notifyPressed,
-                      icon: _notifyIcon,
                       label: Text("")),
                 ),
 
@@ -269,43 +189,28 @@ class _FirstPageState extends State<FirstPage> with TickerProviderStateMixin {
                 //   duration: new Duration(seconds: 1),
                 //   curve: Curves.easeInOut,
                 //     child: new
-                //       OutlineButton(
-                //   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                //       child: const Text("View Results"), textColor: Colors.white, onPressed: (){
-                //               Navigator.push(
-                //               context,
-                //               MaterialPageRoute(builder: (context) => ColorPageRoute(palette[index].keys.first)),
-                //               );
-                //             }),
-
-                //     ),
-
                 OutlineButton(
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30.0)),
                     child: const Text("View Results"),
                     textColor: Colors.white,
                     onPressed: () {
-                      Navigator.of(context).push(new ColorPageRoute());
-                    })
+                      Navigator.push(context,
+                          CupertinoPageRoute(builder: (context) {
+                        return new MaterialApp(
+                          title: '${events[index]['name']}',
+                          home: new SecondPage(
+                              title: '${events[index]['name']}',
+                              id: '${events[index]['id']}'),
+                        );
+                      }));
+                    }),
+
+                //     ),
               ],
             ),
           ]),
     );
-  }
-
-  void _notifyPressed() {
-    Icon _notifytemp = new Icon(IconData(0xe7f7, fontFamily: 'MaterialIcons'),
-        color: Colors.yellowAccent);
-    Icon _notifyOff = new Icon(IconData(0xe7f6, fontFamily: 'MaterialIcons'),
-        color: Colors.yellowAccent);
-    setState(() {
-      if (this._notifyIcon.icon == _notifytemp.icon) {
-        this._notifyIcon = _notifyOff;
-      } else {
-        this._notifyIcon = _notifytemp;
-      }
-    });
   }
 
   void _contactPressed(url) async {
@@ -350,23 +255,24 @@ class ColorPageRoute extends CupertinoPageRoute {
 }
 
 class SecondPage extends StatefulWidget {
-  String t;
-  // SecondPage(String t){
-  //   this.t = t;
-  // }
+  final Widget child;
+  final String title, id;
+  SecondPage({this.title, this.id, Key key, this.child}) : super(key: key);
+
   @override
-  _SecondPageState createState() => new _SecondPageState();
+  _SecondPageState createState() => new _SecondPageState(this.title, this.id);
 }
 
 class _SecondPageState extends State<SecondPage> {
   final TextEditingController _filter = new TextEditingController();
   String _searchText = "";
-  List<List<String>> names = new List.generate(50, (i) => []);
-  List<List<String>> filteredNames = new List.generate(50, (i) => []);
+  List<List<String>> names = new List<List<String>>();
+  List<List<String>> filteredNames = new List<List<String>>();
   Icon _searchIcon = new Icon(Icons.search, color: Colors.yellowAccent);
-  Widget _appBarTitle = new Text('Event_Name');
+  String title, id;
+  Widget _appBarTitle;
 
-  _SecondPageState() {
+  _SecondPageState(this.title, this.id) {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -379,6 +285,7 @@ class _SecondPageState extends State<SecondPage> {
         });
       }
     });
+    _appBarTitle = new Text(this.title, style: TextStyle(color: Colors.white));
   }
 
   @override
@@ -387,6 +294,7 @@ class _SecondPageState extends State<SecondPage> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     print("BUILDSECONDPAGE");
     return Scaffold(
@@ -460,38 +368,25 @@ class _SecondPageState extends State<SecondPage> {
     if (filteredNames[index].length == 0) {
       print("LEN IS 0");
     } else {
+      List<Widget> team = List<Widget>();
       for (int i = 0; i < filteredNames[index].length; i++) {
         print(filteredNames[index][i]);
         print("==");
         // teamNames.add(filteredNames[index][i]);
+        team.add(Align(
+          alignment: Alignment.centerLeft,
+          child: Text('${filteredNames[index][i]}',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ));
+        team.add(new Padding(padding: new EdgeInsets.symmetric(vertical: 3.0)));
       }
       print("_____");
+
       return ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         title: Row(children: <Widget>[
-          Column(children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('${filteredNames[index][0]}',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-            new Padding(padding: new EdgeInsets.symmetric(vertical: 3.0)),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('${filteredNames[index][1]}',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-            new Padding(padding: new EdgeInsets.symmetric(vertical: 3.0)),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('${filteredNames[index][2]}',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-            new Padding(padding: new EdgeInsets.symmetric(vertical: 3.0)),
-          ]),
+          Column(children: team),
           Column(children: <Widget>[
             new Padding(
                 padding:
@@ -526,35 +421,67 @@ class _SecondPageState extends State<SecondPage> {
         this._searchIcon = _close;
         this._appBarTitle = new TextField(
           controller: _filter,
+          style: TextStyle(color: Colors.white),
           decoration: new InputDecoration(
               prefixIcon: _searchIcon1, hintText: 'Search...'),
         );
       } else {
         this._searchIcon = _searchIcon1;
-        this._appBarTitle = new Text('OSPC');
+        this._appBarTitle =
+            new Text(this.title, style: TextStyle(color: Colors.white));
         filteredNames = names;
         _filter.clear();
       }
     });
   }
 
+  void returnAlert(String promptText) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(promptText, textAlign: TextAlign.center),
+          actions: <Widget>[
+            new FlatButton(
+                onPressed: () => Navigator.pop(context), child: new Text('Ok'))
+          ],
+        );
+      },
+    );
+  }
+
   void _getNames() async {
-    print("_GETNAMES");
-    List<List<String>> tempList = new List.generate(50, (i) => []);
-
-    for (int i = 0; i < 50; i++) {
-      for (int j = 0; j < 3; j++) {
-        int k = i * 3 + j;
-        tempList[i].add("Item $k");
-        print("Item $k");
-      }
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {}
+    } on SocketException catch (_) {
+      return returnAlert('Connect to Internet and try again!');
     }
-
-    setState(() {
-      names = tempList;
-      filteredNames = names;
-    });
-
+    String url = 'http://34.73.200.44/getResult',
+        body = '{"event": "${this.id}"}';
+    print('Sending request to server');
+    final response = await http.post(Uri.encodeFull(url),
+        headers: {
+          "Accept": "application/json",
+          HttpHeaders.contentTypeHeader: 'application/json'
+        },
+        body: body);
+    print('Request Body: ' + body);
+    print('Response: ' + response.body.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('Response: ' + response.body.toString());
+      setState(() {
+        Map<String, dynamic> tempResponse =
+            Map<String, dynamic>.from(json.decode(response.body));
+        List<List<String>> tempList = new List<List<String>>();
+        for (int i = 1; i <= tempResponse.keys.length; i++) {
+          tempList.add(List<String>.from(tempResponse[i.toString()]['names']));
+        }
+        names = tempList;
+        filteredNames = names;
+      });
+    }
+    print(names);
     print("_GETNAMESENd");
   }
 }
